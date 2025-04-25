@@ -35,4 +35,4 @@ function verifyProbability() {
     return probability;
 }
 
-console.log(verifyProbability());
+// console.log(verifyProbability());
