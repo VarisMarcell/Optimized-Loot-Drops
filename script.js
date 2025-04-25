@@ -3,8 +3,14 @@
 
 // This is the items with their weights in a nested list.
 const minecraftWeights = [['stone', 15], ['iron', 12], ['gold', 8], ['diamond', 4], ['netherite', 1]];
+
+// player inventory
+let inventory = [['keys', 5], ['coins', 100]];
 // Number of keys
-let keys = 5;
+let keys = inventory[0][1];
+// number of coins
+let coins = inventory[1][1];
+
 
 /* --- BASIC LOOT DROP --- */
 // the items with higher weights will have more entries into the lootTable. For example, the rarest item would only be able to be chosen once, so a weight of 1. A common item like stone would be entered as many times as the weight; for example: 10 times.
@@ -75,6 +81,31 @@ function updateKeyDisplay() {
     document.getElementById("keyCounter").textContent = `Keys: ${keys}`;
 }
 
+// function to update the remaining coins in HTML
+function updateCoinDisplay() {
+    document.getElementById("coinCounter").textContent = `Coins: ${coins}`;
+}
+
+// function to update the player's remaining coins and keys in their inventory
+function updateInventory() {
+    inventory[0][1] = keys;
+    inventory[1][1] = coins;
+}
+
+// function to add a won item to the user's inventory
+function addToInventory(itemName, amount = 1) {
+    // Loop through inventory to find the item
+    for (let i = 0; i < inventory.length; i++) {
+        if (inventory[i][0] === itemName) {
+            inventory[i][1] += amount;
+            return;
+        }
+    }
+
+    // If the item doesn't exist, add it to inventory
+    inventory.push([itemName, amount]);
+}
+
 // function to run code on HTML button press
 function openCrate() {
     if (keys <= 0) {
@@ -88,7 +119,12 @@ function openCrate() {
     const spunItem = selectLootWithoutTable(minecraftWeights);
     const textElement = document.getElementById('spunItemText');
 
+    // add to player's inventory
+    addToInventory(spunItem);
+    updateInventory();
+
     if (textElement) {
+        // update item text
         textElement.textContent = spunItem.toUpperCase();
 
         // remove all rarity classes
@@ -126,13 +162,21 @@ function openCrate() {
     }
 }
 
-// This runs on load to update the number of keys
+// This runs on load to update the text values
 updateKeyDisplay();
+updateCoinDisplay();
 
 // This lets users purchase more keys if they run out
 document.getElementById('buyKeyBtn').addEventListener('click', function() {
-    keys++;
-    updateKeyDisplay();
+    if (coins >= 10) {
+        coins -= 10;
+        keys++;
+        updateCoinDisplay();
+        updateKeyDisplay();
+        updateInventory();
+    } else {
+        alert("You don't have enough coins!");
+    }
 });
 
 // Code to run get loot when a button is pressed

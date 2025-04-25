@@ -103,6 +103,13 @@ body {
     scale: 104%;
 }
 
+.coinCounter {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 8px;
+    color: #444;
+}
+
 .keyCounter {
     font-size: 20px;
     font-weight: bold;
